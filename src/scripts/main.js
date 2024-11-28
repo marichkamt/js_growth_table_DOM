@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function appendRow() {
     if (table.rows.length < maxRows) {
       const newRow = table.insertRow();
+      const numColumns = table.rows.length > 0 ? table.rows[0].cells.length : 0;
 
-      for (let i = 0; i < table.rows[0].cells.length; i++) {
+      for (let i = 0; i < numColumns; i++) {
         const newCell = newRow.insertCell();
 
         newCell.textContent = '';
@@ -34,59 +35,37 @@ document.addEventListener('DOMContentLoaded', function () {
   function removeRow() {
     if (table.rows.length > minRows) {
       table.deleteRow(-1);
-
       updateButtonStates();
     }
   }
 
   function appendColumn() {
-    if (table.rows[0].cells.length < maxColumns) {
+    if (table.rows.length > 0 && table.rows[0].cells.length < maxColumns) {
       for (let i = 0; i < table.rows.length; i++) {
         const newCell = table.rows[i].insertCell();
 
         newCell.textContent = '';
       }
-
       updateButtonStates();
     }
   }
 
   function removeColumn() {
-    if (table.rows[0].cells.length > minColumns) {
+    if (table.rows.length > 0 && table.rows[0].cells.length > minColumns) {
       for (let i = 0; i < table.rows.length; i++) {
         table.rows[i].deleteCell(-1);
       }
-
       updateButtonStates();
     }
   }
 
   function updateButtonStates() {
     const numRows = table.rows.length;
-    const numColumns = table.rows[0].cells.length;
+    const numColumns = numRows > 0 ? table.rows[0].cells.length : 0;
 
-    if (numRows >= maxRows) {
-      appendRowBtn.disabled = true;
-    } else {
-      appendRowBtn.disabled = false;
-    }
-
-    if (numRows <= minRows) {
-      removeRowBtn.disabled = true;
-    } else {
-      removeRowBtn.disabled = false;
-    }
-
-    if (numColumns >= maxColumns) {
-      appendColumnBtn.disabled = true;
-    } else {
-      appendColumnBtn.disabled = false;
-    }
-
-    if (numColumns <= minColumns) {
-      removeColumnBtn.disabled = true;
-    } else {
-      removeColumnBtn.disabled = false;
-    }
+    appendRowBtn.disabled = numRows >= maxRows;
+    removeRowBtn.disabled = numRows <= minRows;
+    appendColumnBtn.disabled = numColumns >= maxColumns;
+    removeColumnBtn.disabled = numColumns <= minColumns;
   }
 });
